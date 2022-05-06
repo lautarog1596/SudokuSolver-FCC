@@ -19,7 +19,7 @@ module.exports = function(app) {
                 res.json({ error: 'Invalid coordinate' });
                 return;
             }
-            if (!/[1-9]/.test(value)) {
+            if (!/[1-9]/.test(value) || value.length > 1) {
                 res.json({ error: 'Invalid value' });
                 return;
             }
@@ -35,15 +35,15 @@ module.exports = function(app) {
             let validCol = solver.checkColPlacement(puzzle, row, col, value);
             let validReg = solver.checkRegionPlacement(puzzle, row, col, value);
             let validRow = solver.checkRowPlacement(puzzle, row, col, value);
-            let conflicts = []
+            let conflict = []
             if (validCol && validReg && validRow) {
                 res.json({ valid: true })
                 return
             } else {
-                if (!validCol) conflicts.push('column')
-                if (!validReg) conflicts.push('region')
-                if (!validRow) conflicts.push('row')
-                res.json({ valid: false, conflicts })
+                if (!validCol) conflict.push('column')
+                if (!validReg) conflict.push('region')
+                if (!validRow) conflict.push('row')
+                res.json({ valid: false, conflict })
                 return
             }
         });
